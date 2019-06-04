@@ -26,7 +26,8 @@ public enum Sprite {
     GOAL1("/resources/images/goal1.png"),
     GOAL2("/resources/images/goal2.png"),
     GOAL3("/resources/images/goal3.png"),
-    GOAL4("/resources/images/goal4.png");
+    GOAL4("/resources/images/goal4.png"),
+    COIN("/resources/images/coin.png");
     
     private final Image image;
     
