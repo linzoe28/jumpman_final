@@ -13,6 +13,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.util.Duration;
+import objects.Coin;
 import objects.Fireball;
 import objects.Goal;
 import objects.Jumpman;
@@ -51,6 +52,13 @@ public class World {
         return fireballs;
     }
     
+    private ObservableList<Coin> coins;
+
+    public ObservableList<Coin> getCoins() {
+        return coins;
+    }
+    
+    
     /* LEVEL */
     
     private Level level;
@@ -65,6 +73,8 @@ public class World {
         goal = new Goal(level.getLength());
         jumpman = new Jumpman();
         fireballs = FXCollections.observableArrayList();
+        coins = FXCollections.observableArrayList(); //FXCollections長可以被追蹤的list
+        coins.addAll(new Coin(new Vector2D(100, 50)), new Coin(new Vector2D(500, 100)), new Coin(new Vector2D(1000, 50)));
         levelTime.set(0);
     }
     
@@ -77,7 +87,7 @@ public class World {
     /* GAME LOOP */
     
     private final Duration frameLength = Duration.millis(1000 / 50);
-    private final Timeline loop = TimelineBuilder.create()
+    private final Timeline loop = TimelineBuilder.create()  
             .cycleCount(Animation.INDEFINITE)
             .keyFrames(new KeyFrame(frameLength, new EventHandler<ActionEvent>() {
                 @Override
@@ -85,7 +95,7 @@ public class World {
                     update();
                 }
             }))
-            .build();
+            .build();  //Timeline會自動執行的元件，cycleCount會觸發回合次數Animation.INDEFINITE無限次，keyFrames多久觸發一次
     
     private boolean paused = true;
     
@@ -115,7 +125,7 @@ public class World {
         
         List<Fireball> toRemove = new ArrayList<>();
         for (Fireball f : fireballs) {
-            if (jumpman.getNode().getBoundsInParent().intersects(f.getNode().getBoundsInParent())) {
+            if (jumpman.getNode().getBoundsInParent().intersects(f.getNode().getBoundsInParent())) {  //intersects計算兩物件是否碰撞，不必依兩座標是否重疊，getBoundsInParent看相對座標
                 jumpman.takeHit();
             }
             
@@ -123,7 +133,18 @@ public class World {
                 toRemove.add(f);
             }
         }
+        
         fireballs.removeAll(toRemove);
+        
+        List<Coin> toRemoveCoins = new ArrayList<>();
+        for(Coin coin : coins){
+            if (jumpman.getNode().getBoundsInParent().intersects(coin.getNode().getBoundsInParent())) {  //intersects計算兩物件是否碰撞，不必依兩座標是否重疊，getBoundsInParent看相對座標
+                //jumpman.takeHit();
+                jumpman.takeCoin();
+                toRemoveCoins.add(coin);
+            }
+        }
+        coins.removeAll(toRemoveCoins);
         
         List<Launch> launches = level.getLaunchesForX(View.getInstance().getX() + View.WIDTH.get());
         for (Launch l : launches) {
@@ -132,7 +153,7 @@ public class World {
         
         if (jumpman.getPosition().getX() >= level.getLength() && ! (jumpman.getState() instanceof Jumping) && ! (jumpman.getState() instanceof Victorious) && ! (jumpman.getState() instanceof Dead)) {
             levelTime.set(levelTime.get() + frameLength.toSeconds());
-            jumpman.setState(new Victorious(jumpman));
+            jumpman.setState(new Victorious(jumpman));  //設定jumpman，這邊贏的狀態
         } else if (!((jumpman.getState() instanceof Victorious) || (jumpman.getState() instanceof Dead))) {
             levelTime.set(levelTime.get() + frameLength.toSeconds());
         }

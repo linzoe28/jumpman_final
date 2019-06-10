@@ -51,6 +51,12 @@ public class Jumpman extends GameObject implements EventHandler<KeyEvent> {
         }
     }
     
+    public void takeCoin(){
+        if(small){
+            setLarge();
+        }
+    }
+    
     public void takeHit() {
         if (!invincible) {
             if (!small) {

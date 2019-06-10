@@ -17,24 +17,22 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextBuilder;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Transform;
+import objects.Coin;
 import objects.Fireball;
 import objects.Jumpman;
 import world.World;
 
 public class View {
-    
+
     /* SIZE */
-    
     public static final ReadOnlyDoubleProperty WIDTH = new ReadOnlyDoubleWrapper(480).getReadOnlyProperty();
     public static final ReadOnlyDoubleProperty HEIGHT = new ReadOnlyDoubleWrapper(240).getReadOnlyProperty();
-    
+
     /* LIMITS FOR SCROLLING */
-    
     public static final ReadOnlyDoubleProperty LIMIT_LOW = new ReadOnlyDoubleWrapper(80).getReadOnlyProperty();
     public static final ReadOnlyDoubleProperty LIMIT_HIGH = new ReadOnlyDoubleWrapper(240).getReadOnlyProperty();
-    
+
     /* POSITION IN WORLD (BOTTOM LEFT CORNER) */
-    
     private final DoubleProperty x = new SimpleDoubleProperty(-80);
     private final DoubleProperty y = new SimpleDoubleProperty(-32);
 
@@ -49,11 +47,11 @@ public class View {
     public void setX(double x) {
         this.x.set(x);
     }
-    
+
     public void setY(double y) {
         this.y.set(y);
     }
-    
+
     public DoubleProperty xProperty() {
         return x;
     }
@@ -61,41 +59,40 @@ public class View {
     public DoubleProperty yProperty() {
         return y;
     }
-    
+
     public void scrollWindow() {
         Jumpman jm = World.getInstance().getJumpman();
-        
+
         if (jm.getPosition().getX() - x.get() > LIMIT_HIGH.get()) {
             x.set(x.get() + (jm.getPosition().getX() - x.get() - LIMIT_HIGH.get()));
         } else if (jm.getPosition().getX() - x.get() < LIMIT_LOW.get()) {
             x.set(x.get() - (LIMIT_LOW.get() - (jm.getPosition().getX() - x.get())));
         }
     }
-    
+
     /* NODES */
-    
     private AnchorPane root;
     private Group view;
     private Help help;
-    
+
     public AnchorPane getRoot() {
         return root;
     }
-    
+
     public void initializeView() {
         root = new AnchorPane();
         view = new Group();
-        
-        Scale viewScale = Transform.scale(1, 1, 0, 0);
-        viewScale.xProperty().bind(root.widthProperty().divide(View.WIDTH));
+
+        Scale viewScale = Transform.scale(1, 1, 0, 0);  //縮放特效(可以縮放任何一種物件)
+        viewScale.xProperty().bind(root.widthProperty().divide(View.WIDTH)); //divide是除法函式，以圖片根外框的大小比例，調整圖片縮放情況。
         viewScale.yProperty().bind(root.heightProperty().divide(View.HEIGHT));
         view.getTransforms().add(viewScale);
-        
+
         view.setFocusTraversable(true);
         view.addEventHandler(KeyEvent.ANY, new Controller());
-        
+
         root.getChildren().add(view);
-        
+
         Text info = TextBuilder.create()
                 .text("Esc: Help\nR: Reset")
                 .font(Font.font("Arial", FontWeight.BOLD, 16))
@@ -103,31 +100,31 @@ public class View {
                 .build();
         AnchorPane.setTopAnchor(info, 20.0);
         AnchorPane.setRightAnchor(info, 20.0);
-        
+
         root.getChildren().add(info);
-        
+
         Text time = TextBuilder.create()
                 .font(Font.font("Arial", FontWeight.BOLD, 16))
                 .fill(Color.WHITE)
                 .build();
         time.textProperty().bind(Bindings.concat("Time: ", Bindings.format("%.2f", World.getInstance().levelTimeProperty()), " seconds"));
-        
+
         AnchorPane.setTopAnchor(time, 20.0);
         AnchorPane.setLeftAnchor(time, 20.0);
-        
+
         root.getChildren().add(time);
-        
+
         help = new Help();
         root.getChildren().add(help);
     }
-    
+
     public void clearView() {
         view.getChildren().clear();
     }
-    
+
     public void loadView() {
         World w = World.getInstance();
-        
+
         view.getChildren().add(w.getBackground().getNode());
         view.getChildren().add(w.getGoal().getNode());
         view.getChildren().add(w.getJumpman().getNode());
@@ -135,7 +132,11 @@ public class View {
         for (Fireball f : w.getFireballs()) {
             view.getChildren().add(f.getNode());
         }
-        
+
+        for (Coin coin : w.getCoins()) {
+            view.getChildren().add(coin.getNode());
+        }
+
         w.getFireballs().addListener(new ListChangeListener<Fireball>() {
             @Override
             public void onChanged(Change<? extends Fireball> change) {
@@ -147,23 +148,34 @@ public class View {
                         view.getChildren().remove(f.getNode());
                     }
                 }
-            } 
+            }
         });
-        
+
+        w.getCoins().addListener(new ListChangeListener<Coin>() {
+            @Override
+            public void onChanged(Change<? extends Coin> c) {
+                while (c.next()) {
+                    for (Coin coin : c.getRemoved()) {
+                        view.getChildren().remove(coin.getNode());
+                    }
+                }
+            }
+        });
+
         x.set(-80);
         y.set(-32);
     }
-    
+
     public Help getHelp() {
         return help;
     }
-    
+
     /* SINGLETON */
-    
     private static final View instance = new View();
-    
-    private View() { }
-    
+
+    private View() {
+    }
+
     public static View getInstance() {
         return instance;
     }
