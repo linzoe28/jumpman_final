@@ -67,7 +67,7 @@ public class World {
         return level;
     }
     
-    public void initializeLevel(String levelName) {
+    public void initializeLevel(String levelName) { 
         level = Level.fromFile(levelName);
         background = new ScrollingBackground();
         goal = new Goal(level.getLength());
@@ -86,7 +86,7 @@ public class World {
 
     /* GAME LOOP */
     
-    private final Duration frameLength = Duration.millis(1000 / 50);
+    private final Duration frameLength = Duration.millis(1000 / 50); //每千分之一秒會更新50次
     private final Timeline loop = TimelineBuilder.create()  
             .cycleCount(Animation.INDEFINITE)
             .keyFrames(new KeyFrame(frameLength, new EventHandler<ActionEvent>() {

@@ -8,8 +8,8 @@ public class Fireball extends GameObject {
     
     public Fireball(Vector2D initialPosition, Vector2D initialVelocity) {
         super(Sprite.FIRE1, new BottomLeftBinding());
-        setPosition(initialPosition);
-        setVelocity(initialVelocity);
+        setPosition(initialPosition);  //位置
+        setVelocity(initialVelocity);  //速度
     }
 
     private double timeElapsed = 0;
@@ -19,7 +19,7 @@ public class Fireball extends GameObject {
         super.update(t);
         
         timeElapsed += t;
-        if (timeElapsed > 0.10) {
+        if (timeElapsed > 0.10) {  //藉助timeElapsed 讓火球有動畫效果
             if (getSprite() == Sprite.FIRE1) {
                 setSprite(Sprite.FIRE2);
             } else if (getSprite() == Sprite.FIRE2) {

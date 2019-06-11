@@ -88,17 +88,17 @@ public class View {
         viewScale.yProperty().bind(root.heightProperty().divide(View.HEIGHT));
         view.getTransforms().add(viewScale);
 
-        view.setFocusTraversable(true);
-        view.addEventHandler(KeyEvent.ANY, new Controller());
+        view.setFocusTraversable(true);  //setFocusTraversable 讓該視窗取得輸入的控制權
+        view.addEventHandler(KeyEvent.ANY, new Controller());  //聽鍵盤事件
 
         root.getChildren().add(view);
 
-        Text info = TextBuilder.create()
+        Text info = TextBuilder.create()  //設定文字
                 .text("Esc: Help\nR: Reset")
                 .font(Font.font("Arial", FontWeight.BOLD, 16))
                 .fill(Color.WHITE)
                 .build();
-        AnchorPane.setTopAnchor(info, 20.0);
+        AnchorPane.setTopAnchor(info, 20.0);  //設定info擺放位置
         AnchorPane.setRightAnchor(info, 20.0);
 
         root.getChildren().add(info);
