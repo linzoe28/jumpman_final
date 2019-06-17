@@ -111,8 +111,17 @@ public class View {
 
         AnchorPane.setTopAnchor(time, 20.0);
         AnchorPane.setLeftAnchor(time, 20.0);
+        
+        Text score = TextBuilder.create()
+                .font(Font.font("Arial", FontWeight.BOLD, 16))
+                .fill(Color.WHITE)
+                .build();
+        score.textProperty().bind(Bindings.concat("Score: ", Bindings.format("%d", World.getInstance().getLevelScore()), ""));
 
-        root.getChildren().add(time);
+        AnchorPane.setTopAnchor(score, 40.0);
+        AnchorPane.setLeftAnchor(score, 20.0);
+
+        root.getChildren().addAll(time, score);
 
         help = new Help();
         root.getChildren().add(help);

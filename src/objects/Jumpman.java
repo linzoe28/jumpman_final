@@ -13,6 +13,7 @@ import states.jumpman.JumpmanState;
 import states.jumpman.Standing;
 import util.Sprite;
 import util.Vector2D;
+import world.World;
 
 public class Jumpman extends GameObject implements EventHandler<KeyEvent> {
 
@@ -52,6 +53,7 @@ public class Jumpman extends GameObject implements EventHandler<KeyEvent> {
     }
     
     public void takeCoin(){
+        World.getInstance().getLevelScore().set(World.getInstance().getLevelScore().get()+10);
         if(small){
             setLarge();
         }

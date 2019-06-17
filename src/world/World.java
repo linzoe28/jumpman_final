@@ -7,7 +7,9 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.animation.TimelineBuilder;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -79,10 +81,16 @@ public class World {
     }
     
     private DoubleProperty levelTime = new SimpleDoubleProperty(0);
+    private IntegerProperty levelScore=new SimpleIntegerProperty(0);
 
     public DoubleProperty levelTimeProperty() {
         return levelTime;
     }
+
+    public IntegerProperty getLevelScore() {
+        return levelScore;
+    }
+    
 
     /* GAME LOOP */
     
