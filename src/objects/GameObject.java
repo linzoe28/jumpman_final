@@ -55,7 +55,7 @@ public class GameObject {
      * Can be overridden to add behaviour.
      */
     public void update(double t) {      
-        setPosition(getPosition().add(v.times(t)).add(a.times(0.5 * t * t)));
+        setPosition(getPosition().add(v.times(t)).add(a.times(0.5 * t * t)));  //計算加速度
         v = v.add(a.times(t));
     }
     

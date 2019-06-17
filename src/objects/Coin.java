@@ -18,7 +18,7 @@ import util.Vector2D;
 public class Coin extends GameObject{
     
     public Coin(Vector2D initialPosition) {
-        super(COIN, new BottomLeftBinding());
+        super(Sprite.COIN, new BottomLeftBinding());
         setPosition(initialPosition);
     }
     

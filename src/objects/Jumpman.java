@@ -17,7 +17,7 @@ import world.World;
 
 public class Jumpman extends GameObject implements EventHandler<KeyEvent> {
 
-    public static final Vector2D WALK_MAX = new Vector2D(200, 0);
+    public static final Vector2D WALK_MAX = new Vector2D(200, 0);  //每個動作都給予預想要改變的距離
     public static final Vector2D RUN_MAX = new Vector2D(450, 0);
     public static final Vector2D ACCEL = new Vector2D(300, 0);
     public static final Vector2D DECEL = new Vector2D(-600, 0);
@@ -52,7 +52,7 @@ public class Jumpman extends GameObject implements EventHandler<KeyEvent> {
         }
     }
     
-    public void takeCoin(){
+    public void takeCoin(){  //碰到硬幣應該做的事
         World.getInstance().getLevelScore().set(World.getInstance().getLevelScore().get()+10);
         if(small){
             setLarge();
